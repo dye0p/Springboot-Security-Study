@@ -3,6 +3,8 @@ package com.springbootproject.springbootsecuritytest.controller;
 import com.springbootproject.springbootsecuritytest.model.User;
 import com.springbootproject.springbootsecuritytest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,5 +63,18 @@ public class IndexController {
 
         return "redirect:/loginForm";
     }
+
+    @Secured("ROLE_ADMIN") //특정 권한을 가진 사용자만 접근 가능
+    @GetMapping("/info")
+    public @ResponseBody String info() {
+        return "개인정보";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
+    @GetMapping("/data")
+    public @ResponseBody String data() {
+        return "데이터정보";
+    }
+
 
 }
