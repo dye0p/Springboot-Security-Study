@@ -22,9 +22,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    ;
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -46,6 +43,9 @@ public class SecurityConfig {
                 .formLogin((form) ->
                         form.loginProcessingUrl("/login")//login주소가 호출이되면 시큐리티 낚아채서 대신 로그인을 진행함
                                 .defaultSuccessUrl("/")) //로그인이 성공되면 '/'로 이동
+
+                .oauth2Login((oauth2) ->
+                        oauth2.loginPage("/loginForm"))
         ;
         return http.build();
     }
