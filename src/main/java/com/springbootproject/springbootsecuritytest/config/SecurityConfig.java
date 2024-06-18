@@ -1,5 +1,7 @@
 package com.springbootproject.springbootsecuritytest.config;
 
+import com.springbootproject.springbootsecuritytest.config.oauth.PrincipalOauth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,6 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity //시큐리티 활성화 (스프링 시큐리티 필터체인에 등록)
 @EnableMethodSecurity(securedEnabled = true) //메서드 수준의 시큐리티 보안 활성화
 public class SecurityConfig {
+
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
 
     /*
      * @Bean : 해당 메서드의 리턴되는 오브젝트는 IoC로 등록함
@@ -45,8 +50,12 @@ public class SecurityConfig {
                                 .defaultSuccessUrl("/")) //로그인이 성공되면 '/'로 이동
 
                 .oauth2Login((oauth2) ->
-                        oauth2.loginPage("/loginForm"))
+                        oauth2.loginPage("/loginForm")
+                                .userInfoEndpoint((userInfo) -> userInfo // OAuth2 Login 성공시 사용자 정보 가져올 설정
+                                        .userService(principalOauth2UserService))) // OAuth2 Login 성공시 후 작업
+//                .oauth2Login(Customizer.withDefaults())
         ;
+        //로그인이 완료되고난 후 후처리가 필요함
         return http.build();
     }
 }
