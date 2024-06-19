@@ -16,8 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(securedEnabled = true) //메서드 수준의 시큐리티 보안 활성화
 public class SecurityConfig {
 
+    private final PrincipalOauth2UserService principalOauth2UserService;
+
     @Autowired
-    private PrincipalOauth2UserService principalOauth2UserService;
+    public SecurityConfig(PrincipalOauth2UserService principalOauth2UserService) { //생성자 주입
+        this.principalOauth2UserService = principalOauth2UserService;
+    }
 
     /*
      * @Bean : 해당 메서드의 리턴되는 오브젝트는 IoC로 등록함
