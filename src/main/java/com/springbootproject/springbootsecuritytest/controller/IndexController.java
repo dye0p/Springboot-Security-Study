@@ -3,7 +3,7 @@ package com.springbootproject.springbootsecuritytest.controller;
 import com.springbootproject.springbootsecuritytest.config.auth.PrincipalDetails;
 import com.springbootproject.springbootsecuritytest.model.User;
 import com.springbootproject.springbootsecuritytest.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
     @GetMapping("/test/login")
     public @ResponseBody String testLogin(Authentication authentication
@@ -37,7 +35,7 @@ public class IndexController {
 
     @GetMapping("/test/oauth/login")
     public @ResponseBody String testOAuthLogin(Authentication authentication
-    , @AuthenticationPrincipal OAuth2User oAuth) {
+            , @AuthenticationPrincipal OAuth2User oAuth) {
         System.out.println("/test/login ======================");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         System.out.println("authentication =" + oAuth2User.getAttributes());
@@ -46,6 +44,7 @@ public class IndexController {
         return "OAuth 세션 정보 확인하기";
     }
 
+
     @GetMapping({"", "/"})
     public String index() {
         return "index";
@@ -53,6 +52,7 @@ public class IndexController {
 
     @GetMapping("/user")
     public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        System.out.println("principalDetails.getUser() = " + principalDetails.getUser());
         return "/user";
     }
 
